@@ -39,10 +39,13 @@ public class InventoryManager : MonoBehaviour
         UnlockMaterial(1);
         UnlockMaterial(2);
         UnlockMaterial(3);
+        UnlockMaterial(6);
     }
 
     public void UnlockMaterial(int itemID)
     {
+        if (Inventory[itemID] == true) return;
+
         Inventory.Remove(itemID);
         Inventory.Add(itemID, true);
         UpdateInventoryUI(UpdateInventoryType.Add, itemID);
@@ -53,6 +56,7 @@ public class InventoryManager : MonoBehaviour
         if (updateType == UpdateInventoryType.Add)
         {
             GameObject newItem = Instantiate(InventoryElement);
+            newItem.name = ResourcesManager.Instance.MaterialNameDictionary[itemID];
             newItem.GetComponent<MaterialBehavior>().itemID = itemID;
             newItem.GetComponent<Image>().sprite = ResourcesManager.Instance.LoadMaterialSprite(itemID);
 

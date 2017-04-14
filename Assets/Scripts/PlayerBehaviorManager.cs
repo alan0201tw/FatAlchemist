@@ -13,12 +13,16 @@ public class PlayerBehaviorManager : MonoBehaviour
         get { return draggingItemID; }
         set
         {
-            draggingItemID = value; GenerateFieldMaterial();
+            draggingItemID = value;
         }
     }
 
-    private GameObject draggingGameObject;
+    public GameObject DraggingGameObject;
 
+    public GameObject MouseOverGameObject;
+
+    [SerializeField]
+    private GameObject FieldMaterialContent;
     [SerializeField]
     private GameObject FieldMaterial;
 
@@ -32,25 +36,61 @@ public class PlayerBehaviorManager : MonoBehaviour
 
     public void GenerateFieldMaterial()
     {
-        GameObject newItem = new GameObject("Item" + draggingItemID.ToString());
-        newItem.AddComponent<Image>();
-        newItem.GetComponent<Image>().sprite = ResourcesManager.Instance.LoadMaterialSprite(draggingItemID);
+        GameObject newFieldMaterial = Instantiate(FieldMaterial);
+        newFieldMaterial.name = ResourcesManager.Instance.MaterialNameDictionary[draggingItemID];
+        newFieldMaterial.GetComponent<Image>().sprite = ResourcesManager.Instance.LoadMaterialSprite(draggingItemID);
+        newFieldMaterial.GetComponent<FieldMaterialBehavior>().itemID = draggingItemID;
 
-        newItem.transform.SetParent(FieldMaterial.transform);
-        draggingGameObject = newItem;
+        newFieldMaterial.transform.SetParent(FieldMaterialContent.transform);
+        DraggingGameObject = newFieldMaterial;
     }
 
     private void Update()
     {
-        if (draggingGameObject != null)
+        if (DraggingGameObject != null)
         {
-            draggingGameObject.transform.position = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+            DraggingGameObject.GetComponent<Image>().raycastTarget = false;
+            DraggingGameObject.transform.position = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
 
-            if(Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonUp(0))
             {
-                draggingGameObject = null;
+                if (DraggingGameObject != null && MouseOverGameObject != null)
+                {
+                    if (MouseOverGameObject.name == "DeleteMaterial")
+                    {
+                        Destroy(DraggingGameObject);
+                        draggingItemID = 0;
+                    }
+                    else
+                    {
+                        foreach (var entry in FormulaManager.Instance.FormulaDictionary)
+                        {
+                            FieldMaterialBehavior tmp = MouseOverGameObject.GetComponent<FieldMaterialBehavior>();
+                            if ((entry.Key.Ingredient1ID == tmp.itemID && entry.Key.Ingredient2ID == DraggingItemID) || (entry.Key.Ingredient2ID == tmp.itemID && entry.Key.Ingredient1ID == DraggingItemID))
+                            {
+                                InventoryManager.Instance.UnlockMaterial(entry.Value);
+
+                                GameObject newFieldMaterial = Instantiate(FieldMaterial);
+                                newFieldMaterial.name = ResourcesManager.Instance.MaterialNameDictionary[entry.Value];
+                                newFieldMaterial.GetComponent<Image>().sprite = ResourcesManager.Instance.LoadMaterialSprite(entry.Value);
+                                newFieldMaterial.GetComponent<FieldMaterialBehavior>().itemID = entry.Value;
+
+                                newFieldMaterial.transform.SetParent(FieldMaterialContent.transform);
+                                newFieldMaterial.transform.position = DraggingGameObject.transform.position;
+                                break;
+                            }
+                        }
+                    }
+                }
+                DraggingGameObject.GetComponent<Image>().raycastTarget = true;
+                ReleaseDraggingItem();
             }
         }
     }
 
+    private void ReleaseDraggingItem()
+    {
+        DraggingGameObject = null;
+        draggingItemID = 0;
+    }
 }

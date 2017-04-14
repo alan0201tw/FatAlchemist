@@ -9,8 +9,8 @@ public class MaterialBehavior : MonoBehaviour
 
     public void Interact()
     {
-        print("Interact");
         PlayerBehaviorManager.Instance.DraggingItemID = itemID;
+        PlayerBehaviorManager.Instance.GenerateFieldMaterial();
     }
     
 }

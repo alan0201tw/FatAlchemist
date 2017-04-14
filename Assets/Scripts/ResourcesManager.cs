@@ -20,6 +20,11 @@ public class ResourcesManager : MonoBehaviour
         MaterialNameDictionary.Add(3, "Coal");
         MaterialNameDictionary.Add(4, "Egg");
         MaterialNameDictionary.Add(5, "Electricity");
+        MaterialNameDictionary.Add(6, "Fire");
+        MaterialNameDictionary.Add(7, "Gasoline");
+        MaterialNameDictionary.Add(8, "Gold");
+        MaterialNameDictionary.Add(9, "Water");
+        MaterialNameDictionary.Add(10, "Wood");
 
         LoadAllSprites();
     }
