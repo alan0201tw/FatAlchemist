@@ -16,9 +16,9 @@ public class PlayerBehaviorManager : MonoBehaviour
             draggingItemID = value;
         }
     }
-
+    [HideInInspector]
     public GameObject DraggingGameObject;
-
+    [HideInInspector]
     public GameObject MouseOverGameObject;
 
     [SerializeField]
@@ -36,13 +36,7 @@ public class PlayerBehaviorManager : MonoBehaviour
 
     public void GenerateFieldMaterial()
     {
-        GameObject newFieldMaterial = Instantiate(FieldMaterial);
-        newFieldMaterial.name = ResourcesManager.Instance.MaterialNameDictionary[draggingItemID];
-        newFieldMaterial.GetComponent<Image>().sprite = ResourcesManager.Instance.LoadMaterialSprite(draggingItemID);
-        newFieldMaterial.GetComponent<FieldMaterialBehavior>().itemID = draggingItemID;
-
-        newFieldMaterial.transform.SetParent(FieldMaterialContent.transform);
-        DraggingGameObject = newFieldMaterial;
+        DraggingGameObject = FieldMaterialManager.Instance.GenerateFieldMaterial(DraggingItemID);
     }
 
     private void Update()
@@ -66,16 +60,12 @@ public class PlayerBehaviorManager : MonoBehaviour
                         foreach (var entry in FormulaManager.Instance.FormulaDictionary)
                         {
                             FieldMaterialBehavior tmp = MouseOverGameObject.GetComponent<FieldMaterialBehavior>();
-                            if ((entry.Key.Ingredient1ID == tmp.itemID && entry.Key.Ingredient2ID == DraggingItemID) || (entry.Key.Ingredient2ID == tmp.itemID && entry.Key.Ingredient1ID == DraggingItemID))
+                            if ((entry.Key.Ingredient1ID == tmp.itemID && entry.Key.Ingredient2ID == DraggingItemID)
+                                || (entry.Key.Ingredient2ID == tmp.itemID && entry.Key.Ingredient1ID == DraggingItemID))
                             {
                                 InventoryManager.Instance.UnlockMaterial(entry.Value);
 
-                                GameObject newFieldMaterial = Instantiate(FieldMaterial);
-                                newFieldMaterial.name = ResourcesManager.Instance.MaterialNameDictionary[entry.Value];
-                                newFieldMaterial.GetComponent<Image>().sprite = ResourcesManager.Instance.LoadMaterialSprite(entry.Value);
-                                newFieldMaterial.GetComponent<FieldMaterialBehavior>().itemID = entry.Value;
-
-                                newFieldMaterial.transform.SetParent(FieldMaterialContent.transform);
+                                GameObject newFieldMaterial = FieldMaterialManager.Instance.GenerateFieldMaterial(entry.Value);
                                 newFieldMaterial.transform.position = DraggingGameObject.transform.position;
                                 break;
                             }
@@ -93,4 +83,5 @@ public class PlayerBehaviorManager : MonoBehaviour
         DraggingGameObject = null;
         draggingItemID = 0;
     }
+
 }

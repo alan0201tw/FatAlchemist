@@ -59,6 +59,7 @@ public class InventoryManager : MonoBehaviour
             newItem.name = ResourcesManager.Instance.MaterialNameDictionary[itemID];
             newItem.GetComponent<MaterialBehavior>().itemID = itemID;
             newItem.GetComponent<Image>().sprite = ResourcesManager.Instance.LoadMaterialSprite(itemID);
+            newItem.transform.Find("Name").GetComponent<Text>().text = newItem.name;
 
             newItem.transform.SetParent(InventoryScrollViewContent.transform);
         }
