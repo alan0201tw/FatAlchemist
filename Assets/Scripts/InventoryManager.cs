@@ -39,7 +39,7 @@ public class InventoryManager : MonoBehaviour
         UnlockMaterial(1);
         UnlockMaterial(2);
         UnlockMaterial(3);
-        UnlockMaterial(6);
+        UnlockMaterial(4);
     }
 
     public void UnlockMaterial(int itemID)

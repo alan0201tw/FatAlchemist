@@ -30,8 +30,19 @@ public class FormulaManager : MonoBehaviour
 
     private void Start()
     {
-        FormulaDictionary.Add(new Formula(1, 2), 4);
-        FormulaDictionary.Add(new Formula(3, 6), 5);
+        FormulaDictionary.Add(new Formula(1, 2), 12);
+        FormulaDictionary.Add(new Formula(3, 4), 5);
+        FormulaDictionary.Add(new Formula(2, 5), 6);
+        FormulaDictionary.Add(new Formula(2, 6), 7);
+        FormulaDictionary.Add(new Formula(5, 6), 8);
+        FormulaDictionary.Add(new Formula(1, 8), 9);
+        FormulaDictionary.Add(new Formula(2, 9), 10);
+        FormulaDictionary.Add(new Formula(1, 10), 11);
+        FormulaDictionary.Add(new Formula(11, 7), 14);
+        FormulaDictionary.Add(new Formula(14, 4), 15);
+        FormulaDictionary.Add(new Formula(11, 15), 16);
+        FormulaDictionary.Add(new Formula(12, 16), 17);
+        FormulaDictionary.Add(new Formula(1, 7), 13);
     }
 
 }
